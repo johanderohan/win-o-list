@@ -10,7 +10,6 @@ var moment = require('moment');
 
 const stripHtml = require("string-strip-html");
 
-// https://a.4cdn.org/co/thread/113737334.json
 var FILEID = '';
 var CURRENT_PATH = '';
 var CURRENT_DATE = '';
@@ -19,7 +18,7 @@ var CURRENT_DATE = '';
 router.get('/', function(req, res, next) {
   loadReleases(CURRENT_PATH,function(data){
     var menu = generateMenu();
-    res.render('index', { title: '0-Day', data: data, menu: menu, selected: CURRENT_DATE });
+    res.render('index', { title: 'win-o-list', data: data, menu: menu, selected: CURRENT_DATE });
   });
 });
 
@@ -28,7 +27,7 @@ router.get('/thread/:file', function(req, res, next) {
   if (req.params.file) {
     loadReleases('thread/'+req.params.file,function(data){
       var menu = generateMenu();
-      res.render('index', { title: '0-Day', data: data, menu: menu, selected: CURRENT_DATE });
+      res.render('index', { title: 'win-o-list', data: data, menu: menu, selected: CURRENT_DATE });
     });
   }
 });
