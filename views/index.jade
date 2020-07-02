@@ -2,7 +2,8 @@ extends layout
 
 block content
   div.dropdown.text-center
-    button#dropdownMenuButton.btn.btn-secondary.dropdown-toggle(type="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") #{moment.unix(selected).format('YYYY-MM-DD')}
+    a(href='/all').btn.btn-dark.all-btn All
+    button#dropdownMenuButton.btn.btn-dark.dropdown-toggle(type="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") #{moment.unix(selected).format('YYYY-MM-DD')}
     ul.dropdown-menu.multi-level(role="menu",aria-labelledby="dropdownMenu")
       each year,index in menu
         li.dropdown-submenu

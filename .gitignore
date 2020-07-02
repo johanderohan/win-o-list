@@ -1,3 +1,4 @@
 node_modules
 thread/*.json
+thread/*.db
 package-lock.json

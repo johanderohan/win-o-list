@@ -7,6 +7,11 @@ var cron = require('node-cron');
 var request = require('request');
 var wget = require('wget-improved');
 var moment = require('moment');
+const { AsyncNedb } = require('nedb-async');
+const db = new AsyncNedb({
+  filename: 'thread/database.db',
+  autoload: true,
+});
 
 const stripHtml = require("string-strip-html");
 
@@ -17,8 +22,17 @@ var CURRENT_DATE = '';
 /* GET home page. */
 router.get('/', function(req, res, next) {
   loadReleases(CURRENT_PATH,function(data){
-    var menu = generateMenu();
-    res.render('index', { title: 'win-o-list', data: data, menu: menu, selected: CURRENT_DATE });
+      var menu = generateMenu();
+      res.render('index', { title: 'win-o-list', data: data, menu: menu, selected: CURRENT_DATE });
+  });
+});
+
+router.get('/all', function(req, res, next) {
+  loadReleases(CURRENT_PATH,function(data){
+    loadFromDB(function(dataDB){
+      var menu = generateMenu();
+      res.render('index', { title: 'win-o-list', data: dataDB, menu: menu, selected: CURRENT_DATE });
+    });
   });
 });
 
@@ -116,6 +130,7 @@ function loadReleases(file_path, next) {
             for (var k = 0; k < releases.length; k++) {
               if(releases[k].links.length) {
                   SAVE_DATA.push(releases[k]);
+                  insertRelease(releases[k]);
               }
             }
 
@@ -136,6 +151,21 @@ function loadReleases(file_path, next) {
 
   }*/
 
+}
+
+async function insertRelease(release) {
+  let exists = await db.asyncFindOne({time:release.time})
+  if(!exists) {
+    let inserted = await db.asyncInsert(release)
+    return true;
+  } else {
+    return false;
+  }
+}
+
+async function loadFromDB(next) {
+  let data = await db.asyncFind({});
+  next(data);
 }
 
 function checkLastThreadDownload() {
