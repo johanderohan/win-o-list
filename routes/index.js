@@ -120,7 +120,7 @@ function loadReleases(file_path, next) {
             for (var j = 0; j < post_split.length; j++) {
               if(post_split[j].length) {
                 if(post_split[j].startsWith('http') && !post_split[j].includes('youtube')) {
-			               releases[releases.length-1].links.push(post_split[j]);
+			               if(typeof releases[releases.length-1] != 'undefined') releases[releases.length-1].links.push(post_split[j]);
                 } else {
                   releases.push({time:json_data.posts[i].time, title:post_split[j], links: []})
                 }
@@ -218,7 +218,10 @@ cron.schedule('0 * * * *', () => {
 
   download.on('end', function(output) {
     console.log('UPDATED https://a.4cdn.org/co/thread/'+FILEID+'.json');
-    checkLastThread();
+    loadReleases(FILE_PATH, function(data){
+      checkLastThread();
+      console.log('Database updated');
+    });
   });
 
   /*const file = fs.createWriteStream('thread/'+FILEID+'.json');
